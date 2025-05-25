@@ -1,0 +1,75 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Typography Guidelines
+
+## Overview
+This rule enforces Apple's typography standards across Vox, ensuring consistent, readable, and native-feeling text throughout the app.
+
+## Core Requirements
+
+### 1. Font Usage
+- Use SF Pro as the primary font family
+- Use New York only for special contexts (e.g., stylized quotes)
+- Never use custom fonts unless explicitly approved
+- Support Dynamic Type for all text elements
+
+### 2. Text Sizes and Weights
+- Minimum font size: 11 points
+- Preferred weights for interface text:
+  - Regular: Body text, timestamps
+  - Medium: Usernames, navigation items
+  - Semibold: Headers, important labels
+  - Bold: Primary actions, emphasis
+- Avoid Light/Ultralight weights for interface text
+
+### 3. Text Hierarchy
+- Use Apple's built-in text styles:
+  - Title1: Main headers
+  - Title2: Section headers
+  - Headline: Important labels
+  - Body: Main content
+  - Callout: Secondary content
+  - Subheadline: Supporting text
+  - Footnote: Small print
+  - Caption: Image captions, metadata
+
+### 4. Implementation
+```swift
+// Text style extension
+extension Font {
+    static let voxTitle = Font.title
+    static let voxHeadline = Font.headline
+    static let voxBody = Font.body
+    static let voxCaption = Font.caption
+}
+
+// Usage in views
+struct ContentView: View {
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Main Title")
+                .font(.voxTitle)
+            Text("Supporting text")
+                .font(.voxBody)
+        }
+    }
+}
+```
+
+### 5. Dynamic Type Support
+- All text must support Dynamic Type
+- Use relative sizing (avoid fixed sizes)
+- Test with all Dynamic Type sizes
+- Ensure proper scaling and layout
+
+### 6. Accessibility
+- Support VoiceOver with proper labels
+- Maintain readability at all text sizes
+- Use semantic text styles for proper scaling
+- Test with accessibility features enabled
+
+## Rationale
+Following Apple's typography guidelines ensures Vox maintains the native iOS feel while providing optimal readability and accessibility. Using system fonts and text styles guarantees consistency with the platform and proper support for all user preferences.

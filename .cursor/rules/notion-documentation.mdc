@@ -1,0 +1,70 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Notion Documentation Rule
+
+## 1. Where to Put Documentation
+- All official Vox documentation must be placed in the Vox Workspace Notion at [https://www.notion.so/Vox-Workspace-1feed16cc6328034aa12d92b58c0c0cf](https://www.notion.so/Vox-Workspace-1feed16cc6328034aa12d92b58c0c0cf).
+- Each major topic or feature should have its own top-level page or a clearly nested subpage.
+- Use clear, descriptive titles for pages (e.g., "Vox SwiftData Implementation Guide").
+- Link related documentation together for easy navigation.
+
+## 2. Notion API Automation & Block Formatting
+- When creating or updating Notion pages via API or automation, always use properly structured JSON objects for content blocks.
+- Never pass blocks as strings or serialized JSON; each block must be a direct object in the array, matching the Notion API schema.
+- Validate all block structures before submission to Notion to prevent formatting errors.
+- Example of correct block structure:
+  ```json
+  [
+    {
+      "object": "block",
+      "type": "heading_2",
+      "heading_2": {
+        "rich_text": [
+          { "type": "text", "text": { "content": "Section Title" } }
+        ]
+      }
+    }
+  ]
+  ```
+- Rationale: This prevents API validation errors and ensures documentation is reliably created and updated in Notion.
+
+## 3. High-Level Organization of the Vox Workspace
+- The workspace should be organized by:
+  - **Core Engineering Docs** (architecture, data, API, platform standards)
+  - **Feature Guides** (per major app feature)
+  - **Design System** (colors, typography, UI patterns)
+  - **Integration Guides** (e.g., BlueSky, analytics)
+  - **Process & Onboarding** (how-tos, onboarding, team practices)
+- Use Notion's database, table, and page linking features to keep docs discoverable and up-to-date.
+- Archive or clearly mark deprecated docs.
+
+## 4. Writing Meaningful, AI-Usable Documentation
+- Write for both humans and AI: be explicit, direct, and avoid ambiguity.
+- Use clear section headings, bullet points, and code blocks for structure.
+- Always include context: what, why, and how.
+- Prefer examples and templates over abstract descriptions.
+- Use consistent terminology and formatting across all docs.
+- Reference and link to relevant Notion pages.
+- When documenting a process, include step-by-step instructions and expected outcomes.
+- For technical docs, include code snippets, API endpoints, and data models where relevant.
+- For process docs, include decision rationale and links to related discussions or tickets.
+
+## 5. Continuous Improvement & AI Feedback
+- Regularly review and update documentation for accuracy and clarity.
+- Encourage team members (and AI) to suggest improvements or flag unclear sections.
+- Use Notion comments or a dedicated "Doc Feedback" page for suggestions.
+- When AI-generated docs are especially helpful, note what made them effective for future reference.
+
+## 6. Additional Suggestions for Improvement
+- Tag documentation with relevant keywords for better search and retrieval.
+- Maintain a "Documentation Index" or map page for high-level navigation.
+- Use versioning or changelogs for critical docs.
+- Periodically audit for outdated or redundant content.
+- Consider a "Quick Start" or "TL;DR" section at the top of long docs.
+
+<!--
+Rationale: This rule ensures that documentation is not only organized and accessible, but also written in a way that is maximally useful for both human developers and AI assistants. Referencing and building on [rules.mdc] ensures consistency and future-proofing.
+-->

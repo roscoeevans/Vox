@@ -1,0 +1,175 @@
+//
+//  ContentView.swift
+//  Vox
+//
+//  Created by Rocky Evans on 5/23/25.
+//
+
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    @StateObject private var appState = AppState()
+    @State private var authService = BlueSkyAuthService()
+    @State private var feedService: BlueSkyFeedService
+    @State private var isRestoringSession = true
+    
+    init() {
+        let sharedAuthService = BlueSkyAuthService()
+        _authService = State(initialValue: sharedAuthService)
+        _feedService = State(initialValue: BlueSkyFeedService(authService: sharedAuthService))
+    }
+    
+    var body: some View {
+        Group {
+            if isRestoringSession {
+                ProgressView("Restoring session...")
+            } else if appState.isAuthenticated {
+                TabView {
+                    FeedView(feedService: feedService)
+                        .tabItem {
+                            Image(systemName: "house")
+                        }
+                    
+                    Text("Search")
+                        .tabItem {
+                            Image(systemName: "magnifyingglass")
+                        }
+                    
+                    Text("Notifications")
+                        .tabItem {
+                            Image(systemName: "bell")
+                        }
+                    
+                    Text("Profile")
+                        .tabItem {
+                            Image(systemName: "person")
+                        }
+                }
+            } else {
+                LoginView(authService: authService)
+            }
+        }
+        .environmentObject(appState)
+        .task {
+            await restoreSession()
+        }
+    }
+    
+    private func restoreSession() async {
+        do {
+            try await authService.restoreSession()
+            if let session = await authService.currentSession {
+                await MainActor.run {
+                    appState.isAuthenticated = true
+                    appState.currentUser = Profile(
+                        id: session.did,
+                        handle: session.handle,
+                        displayName: session.handle
+                    )
+                    isRestoringSession = false
+                }
+            } else {
+                await MainActor.run {
+                    appState.isAuthenticated = false
+                    appState.currentUser = nil
+                    isRestoringSession = false
+                }
+            }
+        } catch {
+            print("[ContentView] Failed to restore session: \(error.localizedDescription)")
+            await MainActor.run {
+                appState.isAuthenticated = false
+                appState.currentUser = nil
+                isRestoringSession = false
+            }
+        }
+    }
+}
+
+struct MainTabView: View {
+    @State private var selectedTab = 0
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            Text("Feed")
+                .tabItem {
+                    Label("Feed", systemImage: "bubble.left.and.bubble.right")
+                }
+                .tag(0)
+            
+            ThreadCreationView()
+                .tabItem {
+                    Label("New Thread", systemImage: "square.and.pencil")
+                }
+                .tag(1)
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person")
+                }
+                .tag(2)
+        }
+    }
+}
+
+// MARK: - Placeholder Views
+struct ThreadCreationView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Thread Creation Coming Soon")
+                .navigationTitle("New Thread")
+        }
+    }
+}
+
+struct ProfileView: View {
+    @EnvironmentObject private var appState: AppState
+    
+    var body: some View {
+        NavigationStack {
+            if let user = appState.currentUser {
+                VStack(spacing: 20) {
+                    AsyncImage(url: user.avatarURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        Image(systemName: "person.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+                    
+                    Text(user.displayName)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Text("@\(user.handle)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    if let bio = user.bio {
+                        Text(bio)
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                }
+                .navigationTitle("Profile")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Sign Out") {
+                            // TODO: Implement sign out
+                        }
+                    }
+                }
+            } else {
+                Text("Profile not available")
+            }
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}

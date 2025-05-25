@@ -1,0 +1,242 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Vox Architecture Guide
+
+## 🏗️ Architecture Overview
+
+Vox follows a feature-based architecture that emphasizes modularity, maintainability, and scalability. Our architecture is designed to support rapid development while maintaining code quality and testability.
+
+### Core Principles
+
+1. **Feature Isolation**
+   - Each feature is self-contained with its own views, view models, and business logic
+   - Features can be developed and tested independently
+   - Clear boundaries prevent feature creep and maintainable code
+
+2. **Clean Architecture**
+   - Clear separation of concerns between UI, business logic, and data layers
+   - Unidirectional data flow
+   - Testable business logic independent of UI framework
+
+3. **Modern Swift Practices**
+   - SwiftUI for declarative UI
+   - Combine for reactive programming
+   - Async/await for asynchronous operations
+   - Property wrappers for dependency injection
+
+## 📁 Project Structure
+
+```
+Vox/
+├── App/                           # App entry point and lifecycle
+├── Features/                      # Feature-based modules
+│   ├── Authentication/            # Auth-related views and logic
+│   ├── Feed/                      # Home feed implementation
+│   ├── Thread/                    # Thread creation and viewing
+│   ├── Profile/                   # User profiles
+│   ├── LoopThreads/              # Mutuals-only posts
+│   ├── DailyPrompts/             # Daily prompt system
+│   └── DraftGarden/              # Draft management
+├── Core/                          # Core functionality
+│   ├── Network/                   # Network layer
+│   ├── Storage/                   # Data persistence
+│   ├── Services/                  # Business logic services
+│   └── Extensions/                # Swift extensions
+├── UI/                           # Shared UI components
+├── Utils/                        # Utility functions
+├── Models/                       # Data models
+└── Config/                       # Configuration files
+```
+
+### Directory Details
+
+#### Features/
+Each feature module follows this structure:
+```
+FeatureName/
+├── Views/                 # SwiftUI views
+├── ViewModels/           # View models and state management
+├── Models/               # Feature-specific models
+├── Services/             # Feature-specific services
+└── Utils/                # Feature-specific utilities
+```
+
+#### Core/
+- **Network/**: Handles all API communication
+  - `ATProtocol/`: BlueSky AT Protocol integration
+  - `APIClient/`: Base networking layer
+- **Storage/**: Data persistence layer
+  - Local storage
+  - Cache management
+- **Services/**: Shared business logic
+- **Extensions/**: Swift extensions for common functionality
+
+#### UI/
+- **Components/**: Reusable UI components
+  - `Atoms/`: Basic building blocks (buttons, typography, icons)
+  - `Molecules/`: Composite components (cards, lists, forms)
+  - `Organisms/`: Complex components (ThreadCard, ProfileHeader)
+- **Styles/**: Design system implementation
+  - `Colors.swift`: Color definitions and semantic colors
+  - `Typography.swift`: Typography system and text styles
+  - `Spacing.swift`: Spacing system and layout constants
+  - `Animations.swift`: Animation definitions and timing
+  - `Materials.swift`: Material definitions and effects
+- **Resources/**: Design assets
+  - `Fonts/`: Custom fonts and typefaces
+  - `Icons/`: SF Symbols and custom icons
+  - `Images/`: App images and illustrations
+
+## 🎯 Development Guidelines
+
+### 1. Feature Development
+
+When developing a new feature:
+1. Create a new directory under `Features/`
+2. Follow the feature module structure
+3. Implement the feature's views, view models, and services
+4. Add necessary tests
+5. Document the feature's API and usage
+
+### 2. Code Organization
+
+- Keep files focused and single-purpose
+- Use extensions to organize code within files
+- Follow Swift naming conventions
+- Document public APIs
+
+### 3. Testing Strategy
+
+- Unit tests for business logic
+- UI tests for views
+- Integration tests for network and storage
+- Test coverage requirements:
+  - Business logic: 80%+
+  - UI components: 60%+
+  - Network layer: 70%+
+
+### 4. Dependency Management
+
+- Use Swift Package Manager for dependencies
+- Keep dependencies up to date
+- Document dependency decisions
+- Minimize external dependencies
+
+## 🔄 State Management
+
+### View Models
+- Use `@StateObject` for view model lifecycle
+- Use `@Published` for observable properties
+- Implement `ObservableObject` protocol
+
+### Data Flow
+1. User action triggers view model method
+2. View model updates state
+3. View automatically updates via SwiftUI binding
+
+## 🎨 UI Guidelines
+
+### Design System
+- Use shared components from `UI/Components/`
+- Follow design system in `UI/Styles/`
+- Maintain consistent spacing and typography
+- Implement Atomic Design principles
+- Use semantic colors and materials
+- Follow animation and interaction guidelines
+
+### Component Usage
+- Prefer design system components over custom implementations
+- Extend design system components when needed
+- Document any custom components
+- Test components across different configurations
+
+### Style Implementation
+- Use semantic colors for all UI elements
+- Follow typography hierarchy
+- Implement proper spacing
+- Use standard animations
+- Support dark mode and accessibility
+
+### Accessibility
+- Support VoiceOver
+- Implement Dynamic Type
+- Maintain minimum tap target sizes
+- Support reduced motion
+
+## 🔐 Security
+
+### Authentication
+- Secure storage of credentials
+- Token management
+- Session handling
+
+### Data Protection
+- Encrypt sensitive data
+- Secure network communication
+- Follow Apple's security guidelines
+
+## 📱 Performance
+
+### Optimization Guidelines
+- Lazy loading of resources
+- Efficient image caching
+- Background processing for heavy tasks
+- Memory management best practices
+
+### Monitoring
+- Track key performance metrics
+- Monitor memory usage
+- Profile network requests
+
+## 🚀 Deployment
+
+### Release Process
+1. Version bump
+2. Update changelog
+3. Run full test suite
+4. Create release branch
+5. Submit to App Store
+
+### Environment Management
+- Development
+- Staging
+- Production
+
+## 📚 Documentation
+
+### Code Documentation
+- Document public APIs
+- Include usage examples
+- Keep documentation up to date
+
+### Architecture Documentation
+- Update this guide as needed
+- Document architectural decisions
+- Maintain feature documentation
+
+## 🔄 Continuous Integration
+
+### CI/CD Pipeline
+- Automated testing
+- Code quality checks
+- Build verification
+- Deployment automation
+
+## 🎯 Future Considerations
+
+### Scalability
+- Plan for feature growth
+- Consider modularization
+- Prepare for team expansion
+
+### Maintenance
+- Regular dependency updates
+- Code quality monitoring
+- Performance optimization
+
+---
+
+This architecture guide is a living document. Update it as the project evolves and new patterns emerge.

@@ -1,0 +1,127 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# BlueSky AT Protocol Integration Guidelines
+
+## Overview
+This rule defines how Vox integrates with the BlueSky AT Protocol, ensuring secure, efficient, and maintainable communication with the BlueSky network.
+
+## Core Requirements
+
+### 1. Protocol Layer
+- Create a dedicated `ATProtocol` module in `Core/Network/ATProtocol`
+- Implement protocol methods as async/await functions
+- Use strong typing for all protocol responses
+- Handle rate limiting and retries automatically
+
+### 2. Authentication
+- Store session tokens securely using Keychain
+- Implement automatic token refresh
+- Handle session expiration gracefully
+- Support multiple PDS (Personal Data Server) endpoints
+
+### 3. Data Models
+- Create Swift models that map to AT Protocol types
+- Use Codable for JSON serialization
+- Include validation in model initializers
+- Document model relationships
+
+### 4. Error Handling
+- Define custom error types for AT Protocol errors
+- Implement proper error propagation
+- Include retry logic for transient failures
+- Log errors with appropriate context
+
+### 5. Caching Strategy
+- Cache frequently accessed data (profiles, posts)
+- Implement cache invalidation rules
+- Use background refresh for stale data
+- Handle offline mode gracefully
+
+### 6. API Methods
+- Group related API calls in service classes
+- Document method parameters and return types
+- Include proper error handling
+- Support pagination where applicable
+
+### 7. Testing
+- Mock AT Protocol responses for unit tests
+- Test error scenarios
+- Verify data model mapping
+- Test offline behavior
+
+## Example
+```swift
+// ATProtocolService.swift
+class ATProtocolService {
+    private let session: ATSession
+    private let cache: ATCache
+    
+    func createPost(content: String, images: [UIImage]) async throws -> Post {
+        // 1. Upload images if any
+        let imageRefs = try await uploadImages(images)
+        
+        // 2. Create post record
+        let post = try await session.createRecord(
+            collection: "app.bsky.feed.post",
+            record: PostRecord(
+                text: content,
+                images: imageRefs,
+                createdAt: Date()
+            )
+        )
+        
+        // 3. Cache the post
+        await cache.store(post)
+        
+        return post
+    }
+    
+    func getTimeline(cursor: String?) async throws -> TimelineResponse {
+        let response = try await session.getTimeline(
+            limit: 50,
+            cursor: cursor
+        )
+        
+        // Cache posts and profiles
+        await cache.store(response.posts)
+        await cache.store(response.profiles)
+        
+        return response
+    }
+}
+
+// Error handling
+enum ATProtocolError: Error {
+    case sessionExpired
+    case rateLimited(TimeInterval)
+    case networkError(Error)
+    case invalidResponse
+}
+
+// Usage in ViewModel
+class FeedViewModel: ObservableObject {
+    @Published private(set) var posts: [Post] = []
+    @Published private(set) var error: Error?
+    
+    private let atService: ATProtocolService
+    
+    func loadTimeline() async {
+        do {
+            let response = try await atService.getTimeline(cursor: nil)
+            await MainActor.run {
+                self.posts = response.posts
+            }
+        } catch {
+            await MainActor.run {
+                self.error = error
+            }
+        }
+    }
+}
+```
+
+## Rationale
+This structure ensures reliable and maintainable integration with the BlueSky AT Protocol. It provides clear patterns for handling authentication, data management, and error cases while maintaining good performance through caching and proper async/await usage.

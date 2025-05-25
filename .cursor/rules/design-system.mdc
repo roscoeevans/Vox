@@ -1,0 +1,162 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Design System Integration Guidelines
+
+## Overview
+This rule defines how the Vox design system is integrated into the project architecture, ensuring consistent implementation across all features while maintaining modularity and scalability.
+
+## Core Requirements
+
+### 1. Design System Structure
+```
+UI/
+├── Components/           # Reusable UI components
+│   ├── Atoms/           # Basic building blocks
+│   │   ├── Buttons/
+│   │   ├── Typography/
+│   │   └── Icons/
+│   ├── Molecules/       # Composite components
+│   │   ├── Cards/
+│   │   ├── Lists/
+│   │   └── Forms/
+│   └── Organisms/       # Complex components
+│       ├── ThreadCard/
+│       ├── ProfileHeader/
+│       └── FeedItem/
+├── Styles/              # Design system implementation
+│   ├── Colors.swift     # Color definitions
+│   ├── Typography.swift # Typography system
+│   ├── Spacing.swift    # Spacing system
+│   ├── Animations.swift # Animation definitions
+│   └── Materials.swift  # Material definitions
+└── Resources/           # Design assets
+    ├── Fonts/
+    ├── Icons/
+    └── Images/
+```
+
+### 2. Component Implementation
+```swift
+// Example of a design system component
+struct VoxButton: View {
+    enum Style {
+        case primary
+        case secondary
+        case destructive
+    }
+    
+    let title: String
+    let style: Style
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.voxBody)
+                .foregroundColor(styleColor)
+                .padding(.horizontal, .voxSpacing16)
+                .padding(.vertical, .voxSpacing8)
+                .background(styleBackground)
+                .cornerRadius(8)
+        }
+    }
+    
+    private var styleColor: Color {
+        switch style {
+        case .primary: return .white
+        case .secondary: return .voxPrimary
+        case .destructive: return .white
+        }
+    }
+    
+    private var styleBackground: Color {
+        switch style {
+        case .primary: return .voxPrimary
+        case .secondary: return .clear
+        case .destructive: return .voxError
+        }
+    }
+}
+```
+
+### 3. Feature Integration
+- Each feature must use design system components
+- Custom components must follow design system guidelines
+- Feature-specific styles must extend design system styles
+- Maintain consistent usage across features
+
+### 4. Style Implementation
+```swift
+// Colors.swift
+extension Color {
+    static let voxPrimary = Color.accentColor
+    static let voxBackground = Color(uiColor: .systemBackground)
+    // ... other colors
+}
+
+// Typography.swift
+extension Font {
+    static let voxTitle = Font.title
+    static let voxBody = Font.body
+    // ... other typography styles
+}
+
+// Spacing.swift
+extension CGFloat {
+    static let voxSpacing8 = 8.0
+    static let voxSpacing16 = 16.0
+    // ... other spacing values
+}
+```
+
+### 5. Usage in Features
+```swift
+// Feature implementation
+struct ThreadView: View {
+    var body: some View {
+        VStack(spacing: .voxSpacing16) {
+            ThreadHeader()
+            ThreadContent()
+            ThreadActions()
+        }
+        .padding(.voxSpacing16)
+        .background(Color.voxBackground)
+    }
+}
+```
+
+### 6. Design System Updates
+- Changes to design system must be documented
+- Updates must be backward compatible
+- Changes must be tested across all features
+- Version design system components
+
+### 7. Testing Requirements
+- Unit tests for design system components
+- Snapshot tests for visual consistency
+- Accessibility tests for all components
+- Performance tests for animations
+
+### 8. Documentation
+- Document all design system components
+- Include usage examples
+- Provide accessibility guidelines
+- Maintain changelog
+
+## Rationale
+This integration approach ensures that the design system is:
+1. Easily accessible to all features
+2. Consistently implemented
+3. Maintainable and scalable
+4. Well-documented and tested
+5. Properly versioned and updated
+
+The structure allows for:
+- Clear separation of concerns
+- Easy component reuse
+- Consistent styling
+- Efficient updates
+- Proper testing

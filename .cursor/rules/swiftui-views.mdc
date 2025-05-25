@@ -1,0 +1,144 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# SwiftUI View Structure Guidelines
+
+## Overview
+This rule defines the structure and organization of SwiftUI views in the Vox app, ensuring consistency, maintainability, and reusability across the codebase. These guidelines are optimized for iOS 18 and leverage the latest SwiftUI features.
+
+## Core Requirements
+
+### 1. View Organization
+- Each feature's views must be organized in the `Features/[FeatureName]/Views` directory
+- Shared components must be placed in `UI/Components`
+- Views should be split into logical, reusable components
+- Each view file should contain only one primary view type
+- Use Swift macros for view generation where appropriate
+
+### 2. View Structure
+- Use `@Observable` macro for view models (replacing `@StateObject` where possible)
+- Use `@State` for simple view-local state
+- Use `@Binding` for two-way data flow between parent and child views
+- Use `@Environment` for app-wide state (replacing `@EnvironmentObject` where possible)
+- Leverage `@Observable` macro for custom environment values
+
+### 3. View Naming
+- View names should be descriptive and end with "View" (e.g., `ThreadCardView`, `ProfileHeaderView`)
+- Preview providers should be named `[ViewName]Preview`
+- View models should be named `[ViewName]ViewModel`
+- Use Swift macros for view generation where appropriate
+
+### 4. View Composition
+- Break down complex views into smaller, reusable components
+- Use view builders for conditional content
+- Keep view hierarchies shallow (max 3-4 levels deep)
+- Use `Group` for logical grouping without adding to view hierarchy
+- Leverage `@ViewBuilder` macro for complex view construction
+- Use `AnyLayout` for dynamic layout switching
+
+### 5. View Modifiers
+- Create custom view modifiers for commonly used style combinations
+- Place modifiers in `UI/Modifiers` directory
+- Use extension methods for view-specific modifiers
+- Chain modifiers in a logical order (layout → style → interaction)
+- Use `ViewModifier` protocol with `@ViewModifier` macro
+- Implement custom layout protocols for complex layouts
+
+### 6. Preview Support
+- Every view must include a preview provider
+- Include multiple preview configurations (light/dark mode, different sizes)
+- Use preview data that represents real-world scenarios
+- Include accessibility previews
+- Use `#Preview` macro with multiple configurations
+- Include dynamic type previews
+- Test with different device sizes and orientations
+
+### 7. Error Handling
+- Use `@State` for error handling in views
+- Present errors using SwiftUI's alert or sheet modifiers
+- Include retry mechanisms where appropriate
+- Handle loading states with progress indicators
+- Use `@Error` property wrapper for error handling
+- Implement custom error views with `ErrorView` protocol
+
+### 8. Performance
+- Use `LazyVStack` and `LazyHStack` for long lists
+- Implement `Equatable` for custom views when appropriate
+- Use `@ViewBuilder` for conditional view construction
+- Avoid expensive computations in view body
+- Use `@MainActor` for UI updates
+- Implement `ViewModifier` with `@ViewModifier` macro
+- Use `ScrollView` with `scrollTargetBehavior` for smooth scrolling
+- Implement custom layout protocols for complex layouts
+
+### 9. Modern SwiftUI Features
+- Use `ScrollView` with `scrollTargetBehavior` for smooth scrolling
+- Implement custom layout protocols for complex layouts
+- Use `@Observable` macro for state management
+- Leverage `@ViewModifier` macro for custom modifiers
+- Use `AnyLayout` for dynamic layout switching
+- Implement custom layout protocols for complex layouts
+- Use `@Error` property wrapper for error handling
+- Use `@MainActor` for UI updates
+
+## Example
+```swift
+@Observable
+class ThreadCardViewModel {
+    var author: Author
+    var content: String
+    var likes: Int
+    var reposts: Int
+    
+    func handleLike() async {
+        // Implementation
+    }
+}
+
+struct ThreadCardView: View {
+    @State private var viewModel: ThreadCardViewModel
+    @State private var isExpanded = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ThreadHeaderView(author: viewModel.author)
+            ThreadContentView(content: viewModel.content)
+            ThreadActionsView(
+                likes: viewModel.likes,
+                reposts: viewModel.reposts,
+                onLike: viewModel.handleLike
+            )
+        }
+        .padding()
+        .background(Color.cardBackground)
+        .cornerRadius(12)
+        .shadow(radius: 2)
+        .scrollTargetBehavior(.viewAligned)
+    }
+}
+
+#Preview {
+    ThreadCardView(viewModel: ThreadCardViewModel(thread: .sample))
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .previewDisplayName("Default")
+        .previewDevice("iPhone 15 Pro")
+        .previewInterfaceOrientation(.portrait)
+        .preferredColorScheme(.light)
+}
+
+#Preview {
+    ThreadCardView(viewModel: ThreadCardViewModel(thread: .sample))
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .previewDisplayName("Dark Mode")
+        .previewDevice("iPhone 15 Pro")
+        .previewInterfaceOrientation(.portrait)
+        .preferredColorScheme(.dark)
+}
+```
+
+## Rationale
+This structure ensures consistent, maintainable, and performant SwiftUI views across the Vox app. It promotes reusability, testability, and clear separation of concerns while following SwiftUI best practices. The guidelines are optimized for iOS 18 and leverage the latest SwiftUI features, including macros, property wrappers, and modern layout protocols.

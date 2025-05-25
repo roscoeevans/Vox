@@ -1,0 +1,92 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Animation and Interaction Guidelines
+
+## Overview
+This rule defines how animations and interactions should be implemented in Vox, ensuring a fluid, responsive, and Apple-like feel throughout the app.
+
+## Core Requirements
+
+### 1. Animation Principles
+- Every animation must serve a purpose
+- Keep animations subtle and natural
+- Use spring animations for interactive elements
+- Respect "Reduce Motion" setting
+
+### 2. Standard Durations
+```swift
+extension Animation {
+    static let voxStandard = Animation.easeInOut(duration: 0.3)
+    static let voxSpring = Animation.spring(response: 0.3, dampingFraction: 0.7)
+    static let voxQuick = Animation.easeInOut(duration: 0.15)
+}
+```
+
+### 3. Common Animations
+- Navigation transitions: Push/pop with standard duration
+- Modal presentations: Slide up with spring animation
+- Button feedback: Quick scale with spring
+- List updates: Fade with standard duration
+- Loading states: Subtle pulse animation
+
+### 4. Implementation
+```swift
+// Button animation
+struct AnimatedButton: View {
+    @State private var isPressed = false
+    
+    var body: some View {
+        Button("Action") {
+            withAnimation(.voxSpring) {
+                isPressed = true
+            }
+            // Action
+        }
+        .scaleEffect(isPressed ? 0.95 : 1.0)
+        .animation(.voxSpring, value: isPressed)
+    }
+}
+
+// List animation
+struct AnimatedList: View {
+    var body: some View {
+        List {
+            ForEach(items) { item in
+                ItemRow(item: item)
+                    .transition(.opacity)
+            }
+        }
+        .animation(.voxStandard, value: items)
+    }
+}
+```
+
+### 5. Gesture Interactions
+- Support standard iOS gestures
+- Provide immediate visual feedback
+- Allow gesture interruption
+- Use spring animations for gesture completion
+
+### 6. Haptic Feedback
+- Use system haptics for standard actions
+- Provide feedback for important events
+- Keep haptics subtle and purposeful
+- Test on real devices
+
+### 7. Performance
+- Avoid expensive animations
+- Use hardware-accelerated properties
+- Test on older devices
+- Monitor animation frame rates
+
+### 8. Accessibility
+- Respect "Reduce Motion" setting
+- Provide alternative feedback methods
+- Ensure animations don't interfere with VoiceOver
+- Test with accessibility features enabled
+
+## Rationale
+Following Apple's animation and interaction guidelines ensures Vox feels responsive and natural. Proper animations provide feedback and context while maintaining performance and accessibility.

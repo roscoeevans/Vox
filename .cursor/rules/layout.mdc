@@ -1,0 +1,93 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Layout and Spacing Guidelines
+
+## Overview
+This rule defines how layouts and spacing should be implemented in Vox, ensuring consistent, readable, and Apple-like layouts throughout the app.
+
+## Core Requirements
+
+### 1. Spacing System
+```swift
+extension CGFloat {
+    // Base spacing units
+    static let voxSpacing2 = 2.0
+    static let voxSpacing4 = 4.0
+    static let voxSpacing8 = 8.0
+    static let voxSpacing12 = 12.0
+    static let voxSpacing16 = 16.0
+    static let voxSpacing24 = 24.0
+    static let voxSpacing32 = 32.0
+    static let voxSpacing48 = 48.0
+}
+```
+
+### 2. Layout Principles
+- Use standard iOS margins
+- Maintain consistent spacing
+- Support dynamic type
+- Respect safe areas
+- Use proper padding for touch targets
+
+### 3. Common Layouts
+- Card layouts: 16pt padding
+- List items: 12pt vertical spacing
+- Section headers: 24pt top margin
+- Content margins: 16pt horizontal
+- Touch targets: Minimum 44x44pt
+
+### 4. Implementation
+```swift
+// Card layout
+struct CardView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: .voxSpacing12) {
+            // Content
+        }
+        .padding(.voxSpacing16)
+        .background(Color.voxBackground)
+        .cornerRadius(12)
+    }
+}
+
+// List layout
+struct ListItem: View {
+    var body: some View {
+        HStack(spacing: .voxSpacing12) {
+            // Content
+        }
+        .padding(.vertical, .voxSpacing8)
+        .padding(.horizontal, .voxSpacing16)
+    }
+}
+```
+
+### 5. Responsive Layout
+- Support all iPhone sizes
+- Use flexible layouts
+- Implement proper constraints
+- Test on different devices
+
+### 6. Grid System
+- Use standard iOS grid
+- Maintain consistent gutters
+- Support dynamic type
+- Ensure proper spacing
+
+### 7. Accessibility
+- Support Dynamic Type
+- Maintain proper spacing with large text
+- Ensure touch targets are accessible
+- Test with VoiceOver
+
+### 8. Best Practices
+- Use SwiftUI's built-in layout system
+- Avoid fixed sizes where possible
+- Use relative spacing
+- Test with different content lengths
+
+## Rationale
+Following Apple's layout and spacing guidelines ensures Vox maintains a consistent, readable, and accessible layout across all devices. Proper spacing and layout contribute to the app's overall usability and visual appeal.

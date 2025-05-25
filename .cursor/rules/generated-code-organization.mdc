@@ -1,0 +1,28 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Generated Code Organization
+
+## Scope
+This rule defines where and how to organize auto-generated code (such as protocol models from codegen tools) in the Vox project, ensuring clarity, maintainability, and architectural consistency.
+
+## Rule
+- Place all auto-generated code in a top-level directory named `Generated/` (or `GeneratedSwift/` if language-specific).
+- Do **not** mix generated files with hand-written code in `Models/`, `Core/`, or `Features/`.
+- Add the `Generated/` directory to Xcode as a folder reference, not a group, to ensure new files are picked up automatically.
+- Never hand-edit files in `Generated/`. If customization is needed, wrap or extend generated types in your own modules.
+- Optionally, add `Generated/` to `.gitignore` if you prefer not to commit generated code; otherwise, keep it tracked for reproducibility.
+- Document the codegen process in `Docs/` or the project README.
+
+## Example
+```
+/Generated/         # All generated Swift files (e.g., from atproto-lexicon-gen)
+/Core/
+/Models/
+/Features/
+```
+
+## Rationale
+Keeping generated code separate from hand-written code prevents accidental edits, clarifies code ownership, and aligns with Vox's modular, maintainable architecture.

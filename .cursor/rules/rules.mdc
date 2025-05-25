@@ -1,0 +1,134 @@
+---
+description: Creating or updating any .mdc file, which are rules
+globs: ["**/*.mdc"]
+alwaysApply: true
+---
+# Rule Creation Guidelines
+
+## Overview
+This meta-rule instructs Cursor AI (or any similar assistant) on how to craft a new best-practice rule. It's essentially a rule about writing rules – to be referenced whenever the AI is asked to generate documentation-style guidelines in coding, architecture, UX, etc.
+
+## Rule File Organization
+
+### File Location and Format
+- All rules must be stored in the `.cursor/rules` directory
+- Rules must use the `.mdc` file extension
+- Each rule should be in its own file
+- The file name should match the rule's primary topic
+
+### YAML Frontmatter Headers
+Every rule file must begin with a YAML frontmatter header containing three required fields:
+
+```yaml
+---
+description: A concise, one-line summary of the rule's purpose and scope
+globs: Array of file patterns where this rule applies
+alwaysApply: Boolean indicating if the rule should always be considered
+---
+```
+
+#### Description Field
+- Must be a single line, clear summary
+- Should include:
+  - Primary purpose of the rule
+  - Key terms for semantic search
+  - Scope/context where it applies
+- Examples:
+  - "SwiftUI view structure and organization guidelines for iOS 18+ features"
+  - "Core architectural principles and project structure guidelines"
+  - "Color system and material usage guidelines for consistent UI"
+
+#### Globs Field
+- Must be an array of file patterns
+- Use standard glob syntax:
+  - `**/*.swift` for all Swift files
+  - `Features/**/*.swift` for feature-specific files
+  - `UI/**/*.swift` for UI components
+  - `**/*.mdc` for rule files
+- Examples:
+  - `["**/*.swift", "Features/**/*.swift"]` for SwiftUI rules
+  - `["**/*.swift", "**/*.md"]` for architecture rules
+  - `["**/*.mdc"]` for meta-rules
+
+#### AlwaysApply Field
+- Must be a boolean value
+- Set to `true` for:
+  - Core architectural rules
+  - Security guidelines
+  - Fundamental coding standards
+  - Meta-rules about rule creation
+- Set to `false` for:
+  - Feature-specific guidelines
+  - UI component rules
+  - Technology-specific patterns
+  - Optional best practices
+
+### Rule Naming Conventions
+- Use kebab-case for file names (e.g., `error-handling.mdc`, `code-style.mdc`)
+- File names should be descriptive but concise (2-3 words maximum)
+- Avoid generic terms like "general" or "misc"
+- Use domain-specific prefixes when applicable (e.g., `frontend-`, `backend-`, `security-`)
+- Examples of good rule names:
+  - `error-handling.mdc`
+  - `frontend-styling.mdc`
+  - `api-security.mdc`
+  - `database-naming.mdc`
+  - `git-workflow.mdc`
+
+## Core Requirements
+
+### 1. Define the Rule's Scope
+- Clearly identify what the rule is about (e.g., coding style, error handling, architecture decision, UI/UX principle)
+- Start the rule by stating its focus or the context in which it applies
+- Example: "Logging Standard (Backend) – Guidelines for structured logging in backend services"
+- This helps categorize the rule and signals when it's relevant
+
+### 2. Be Clear and Direct
+- State the best practice or guideline in imperative, unambiguous terms
+- Avoid vague language
+- The rule should read like a command or strong recommendation to the developer/AI
+- Example: "Always sanitize user input before processing to prevent injection attacks," not "Try to be careful with user input"
+
+### 3. Keep it Concise
+- Write the rule in a compact form – typically a short paragraph or a few bullet points
+- Omit unnecessary detail or explanation
+- Assume the reader has basic knowledge, and focus on what to do or not do
+- If the rule exceeds a reasonable length (say, more than a few hundred words), consider splitting it into smaller rules
+
+### 4. Include Specifics or Examples
+- If a rule might be interpreted in different ways, add a concrete example, counterexample, or reference for clarity
+- This could be inline (e.g., a one-liner code snippet) or a link to a template or doc
+- Make sure the example directly illustrates the rule
+- Example: "Avoid using mutable globals. For instance, do not use global state_dict = {...} at module top-level; use dependency injection instead"
+
+### 5. Use Consistent Formatting
+- Present the rule in a structured format (Markdown) that is easy to read
+- Use bullet points, numbered lists, or subheadings to organize information when a rule has multiple parts
+- Ensure the tone and style match the rest of the ruleset (formal, documentation-like, but not overly verbose)
+- Consistency helps both human collaborators and the AI parse the rules correctly
+
+### 6. Tag or Annotate if Possible
+- Add metadata, tags, or contextual cues within the rule that indicate relevant domains
+- For example, in a comment or front-matter, tag the rule with keywords like security, frontend, performance
+- This will aid the AI in context-aware retrieval of the rule
+- Example: start the rule file with a brief YAML header: `tags: [ "security", "web" ]` (if supported by the system)
+
+### 7. Ensure Future Relevance
+- Phrase the rule in a way that focuses on enduring principles or widely accepted practices
+- Avoid tying the rule to transient details (library versions, specific line numbers, etc.) unless necessary
+- If the rule is likely to change with tech updates, note that in a comment
+- Example: "(Note: This guideline should be revised when migrating to Framework X v3.)"
+
+### 8. Review for Conflicts or Overlap
+- Before finalizing a new rule, check it against existing rules
+- Make sure it doesn't contradict other guidance
+- See if any similar rule already exists
+- If there's overlap, decide whether to merge them or differentiate the new rule's scope
+- The AI should reconcile new rules with the old ones for consistency
+
+### 9. Documentation of Rationale
+- In a comment or footnote (not in the main instruction text), briefly document why this rule exists
+- This is more for human readers, but it also helps the AI understand the intent behind the rule
+- Example: "Rationale: Using snake_case for database columns ensures consistency with legacy schema"
+- Keeping rationale separate from the directive ensures the rule remains clear and concise
+

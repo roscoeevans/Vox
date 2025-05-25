@@ -1,0 +1,96 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Color and Material Guidelines
+
+## Overview
+This rule defines Vox's color system and material usage, ensuring a consistent, Apple-like visual language throughout the app.
+
+## Core Requirements
+
+### 1. Color System
+- Use semantic colors for all UI elements
+- Support both light and dark mode
+- Use system colors for standard interactions
+- Define a limited set of accent colors
+
+### 2. Semantic Colors
+```swift
+extension Color {
+    // Primary colors
+    static let voxPrimary = Color.accentColor
+    static let voxBackground = Color(uiColor: .systemBackground)
+    static let voxSecondaryBackground = Color(uiColor: .secondarySystemBackground)
+    
+    // Text colors
+    static let voxText = Color(uiColor: .label)
+    static let voxSecondaryText = Color(uiColor: .secondaryLabel)
+    
+    // Interactive colors
+    static let voxLink = Color.blue
+    static let voxSuccess = Color.green
+    static let voxError = Color.red
+    static let voxWarning = Color.yellow
+}
+```
+
+### 3. Color Usage
+
+Primary Brand Color: Indigo #5748CB
+Seconday Brand Color: Hot Pink #FF55C1
+Brand Detail Color: Casablanca #F3BA48
+
+- Blue: Primary interactive elements
+- Green: Success states, positive actions
+- Red: Destructive actions, errors
+- Yellow: Warnings, highlights
+- System colors: For standard UI elements
+- Custom colors: Only for brand-specific elements
+
+### 4. Materials and Effects
+- Use system materials for overlays
+- Implement proper blur effects
+- Support vibrancy where appropriate
+- Use subtle shadows for depth
+
+### 5. Implementation
+```swift
+// Material usage
+struct BlurredCard: View {
+    var body: some View {
+        VStack {
+            // Content
+        }
+        .background(.ultraThinMaterial)
+        .cornerRadius(12)
+    }
+}
+
+// Color usage
+struct ActionButton: View {
+    var body: some View {
+        Button("Action") {
+            // Action
+        }
+        .foregroundColor(.voxPrimary)
+        .background(Color.voxBackground)
+    }
+}
+```
+
+### 6. Dark Mode Support
+- Test all colors in both modes
+- Ensure proper contrast ratios
+- Use semantic colors for automatic adaptation
+- Avoid hard-coded color values
+
+### 7. Accessibility
+- Support increased contrast mode
+- Maintain WCAG 2.1 contrast ratios
+- Test with color blindness simulators
+- Provide alternative indicators for color-only information
+
+## Rationale
+Following Apple's color and material guidelines ensures Vox maintains a native iOS feel while providing a consistent and accessible visual experience. Using semantic colors and system materials guarantees proper adaptation to user preferences and system settings.
