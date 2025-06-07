@@ -4,6 +4,7 @@
 
 ## User settings
 xcuserdata/
+*.xcuserstate
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
@@ -124,4 +125,19 @@ package-lock.json
 .cursor/
 
 # Generated files
-Generated/ 
+Generated/
+
+# Xcode build directories (extra safety)
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# SPM build artifacts
+.build/
+.swiftpm/
+
+# Temporary files
+*.tmp
+*.temp
+*~ 
