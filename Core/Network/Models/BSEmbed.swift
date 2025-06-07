@@ -227,6 +227,19 @@ struct AspectRatio: Codable {
 
 class BSViewer: Codable {
     let like: String?
+    let repost: String?
     let threadMuted: Bool?
     let embeddingDisabled: Bool?
+    
+    init(
+        like: String? = nil,
+        repost: String? = nil,
+        threadMuted: Bool? = nil,
+        embeddingDisabled: Bool? = nil
+    ) {
+        self.like = like
+        self.repost = repost
+        self.threadMuted = threadMuted
+        self.embeddingDisabled = embeddingDisabled
+    }
 } 

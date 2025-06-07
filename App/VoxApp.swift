@@ -17,6 +17,9 @@ struct VoxApp: App {
     let modelContainer: ModelContainer
     
     init() {
+        // Register custom fonts
+        FontRegistration.registerCustomFonts()
+        
         do {
             modelContainer = try ModelContainer(
                 for: Draft.self, Profile.self, Thread.self,
@@ -32,7 +35,7 @@ struct VoxApp: App {
             ContentView()
                 .environmentObject(appState)
                 .preferredColorScheme(.dark)
-                .tint(.voxPrimary)
+                .tint(.voxSkyBlue)
         }
         .modelContainer(modelContainer)
     }

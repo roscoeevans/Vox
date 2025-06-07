@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 // ... existing code ...
 // Place PostContent struct and its extractQuotedEmbed helper here.
 // ... existing code ...
@@ -11,19 +12,24 @@ struct PostContent: View {
             Text(post.post.record.text)
                 .font(.body)
             
-            // Check both post.embed and post.post.record.embed for images
-            if let images = post.embed?.images ?? post.post.record.embed?.images {
-                PostImages(images: images)
-                    .environment(\.postAuthorDID, post.author.did)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            
             // --- QUOTE/EMBEDDED THREAD SUPPORT ---
             if let quotedEmbed = extractQuotedEmbed(),
                (quotedEmbed.value?.text != nil || quotedEmbed.post?.author.displayName != nil || quotedEmbed.post?.author.handle != "") {
                 QuotedPostView(quotedEmbed: quotedEmbed)
             }
+            
+            // --- EXTERNAL LINK SUPPORT ---
+            if let external = (post.embed ?? post.post.record.embed)?.external {
+                ExternalLinkCard(external: external, authorDID: post.author.did)
+            }
+            
+            // Images should always be the last element, so their bottom aligns with post actions
+            if let images = post.embed?.images ?? post.post.record.embed?.images {
+                PostImages(images: images)
+                    .environment(\.postAuthorDID, post.author.did)
+            }
         }
+        // If there are no images, the bottom of the content will be text or quoted post
     }
     
     // Helper to extract quoted/embedded post
@@ -38,4 +44,6 @@ struct PostContent: View {
         }
         return nil
     }
-} 
+}
+
+// External link view component - REMOVED (now using ExternalLinkCard) 

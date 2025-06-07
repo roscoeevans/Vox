@@ -10,9 +10,33 @@ struct BSAuthor: Codable {
     let labels: [FeedLabel]?
     let createdAt: String
     
-    /// Returns the handle without the .bsky.social suffix if present
+    /// Returns the handle formatted for display using the default configuration
     var formattedHandle: String {
-        handle.formatBlueskyHandle()
+        HandleFormatter.shared.formatForFeed(handle, isVerified: isVerified)
+    }
+    
+    /// Returns the handle formatted for compact display
+    var compactHandle: String {
+        HandleFormatter.shared.formatCompact(handle)
+    }
+    
+    /// Returns the handle formatted for profile display
+    var profileHandle: String {
+        HandleFormatter.shared.formatForProfile(handle)
+    }
+    
+    /// Checks if the author might be verified based on their handle domain
+    var isVerified: Bool {
+        // Check if the handle has a custom domain
+        guard let domain = handle.handleDomain else { return false }
+        
+        // Get the formatted handle - if it's different from the original,
+        // then a common suffix was removed, so it's not a verified domain
+        let formatted = HandleFormatter.shared.format(handle, mode: .smart)
+        
+        // If the formatted version is the same as the original handle,
+        // it means no common suffix was removed, indicating a custom domain
+        return formatted == handle && !domain.isEmpty
     }
     
     init(

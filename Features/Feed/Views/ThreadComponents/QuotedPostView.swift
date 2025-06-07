@@ -29,27 +29,24 @@ struct QuotedPostView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         if let displayName = post.author.displayName, !displayName.isEmpty {
                             Text(displayName)
-                                .font(.subheadline).fontWeight(.semibold)
+                                .font(.voxSubheadline())
+                                .fontWeight(.semibold)
                                 .foregroundColor(.primary)
-                            Text("@" + post.author.formattedHandle)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                            AuthorHandleView(author: post.author, isCompact: true)
                         } else {
-                            Text("@" + post.author.formattedHandle)
-                                .font(.subheadline).fontWeight(.semibold)
-                                .foregroundColor(.primary)
+                            AuthorHandleView(author: post.author)
                         }
                     }
                 }
                 if let text = quotedEmbed.value?.text, !text.isEmpty {
                     Text(text)
-                        .font(.body)
+                        .font(.voxBody())
                         .foregroundColor(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 2)
                 } else if !post.record.text.isEmpty {
                     Text(post.record.text)
-                        .font(.body)
+                        .font(.voxBody())
                         .foregroundColor(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 2)
@@ -63,7 +60,7 @@ struct QuotedPostView: View {
             } else {
                 // Unavailable/deleted post
                 Text("This post is unavailable")
-                    .font(.subheadline)
+                    .font(.voxSubheadline())
                     .foregroundColor(.secondary)
                     .italic()
                     .padding(.vertical, 8)

@@ -141,21 +141,21 @@ struct ProfileView: View {
                     .clipShape(Circle())
                     
                     Text(user.displayName)
-                        .font(.title2)
-                        .fontWeight(.bold)
+                        .font(.voxTitle2())
                     
-                    Text("@\(user.handle)")
-                        .font(.subheadline)
+                    Text(user.handle)
+                        .font(.voxSubheadline())
                         .foregroundStyle(.secondary)
                     
                     if let bio = user.bio {
                         Text(bio)
-                            .font(.body)
+                            .font(.voxBody())
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }
                 }
                 .navigationTitle("Profile")
+                .voxNavigationTitleFont()
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Sign Out") {

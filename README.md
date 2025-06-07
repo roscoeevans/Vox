@@ -76,7 +76,7 @@ Vox follows a feature-based architecture that emphasizes modularity, maintainabi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/Vox.git
+   git clone https://github.com/roscoeevans/Vox.git
    ```
 
 2. Open the project in Xcode:
@@ -132,6 +132,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Roscoe Evans - [@roscoeevans](https://github.com/roscoeevans)
 
-Project Link: [https://github.com/yourusername/Vox](https://github.com/yourusername/Vox) 
+Project Link: [https://github.com/roscoeevans/Vox](https://github.com/roscoeevans/Vox) 

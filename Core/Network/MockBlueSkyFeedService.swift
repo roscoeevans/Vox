@@ -130,26 +130,206 @@ actor MockBlueSkyFeedService: FeedServiceProtocol {
         // Simulate network delay
         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
         
-        // If cursor is nil, return first page
-        if cursor == nil {
-            return TimelineResponse(
-                cursor: "mock-cursor-1",
-                feed: Array(mockPosts.prefix(2))
-            )
-        }
-        
-        // If cursor is "mock-cursor-1", return second page
-        if cursor == "mock-cursor-1" {
-            return TimelineResponse(
-                cursor: nil,
-                feed: Array(mockPosts.suffix(1))
-            )
-        }
-        
-        // If cursor is anything else, return empty response
         return TimelineResponse(
-            cursor: nil,
-            feed: []
+            cursor: "next-cursor",
+            feed: mockPosts
         )
+    }
+    
+    func likePost(uri: String, cid: String) async throws -> LikeResponse {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        
+        // Generate a mock like URI
+        let likeURI = "at://\(UUID().uuidString)/app.bsky.feed.like/\(UUID().uuidString)"
+        return LikeResponse(uri: likeURI, cid: cid)
+    }
+    
+    func unlikePost(uri: String) async throws {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Mock successful unlike
+    }
+    
+    func repostPost(uri: String, cid: String) async throws -> RepostResponse {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        
+        // Generate a mock repost URI
+        let repostURI = "at://\(UUID().uuidString)/app.bsky.feed.repost/\(UUID().uuidString)"
+        return RepostResponse(uri: repostURI, cid: cid)
+    }
+    
+    func unrepostPost(uri: String) async throws {
+        // No-op for mock
+    }
+    
+    func getPostThread(uri: String, depth: Int? = nil, parentHeight: Int? = nil) async throws -> PostThreadResponse {
+        // Create a mock thread response
+        let mockPost = mockPosts.first ?? FeedViewPost(
+            post: BSPost(
+                uri: uri,
+                cid: "mock-cid",
+                author: BSAuthor(
+                    did: "did:plc:mock",
+                    handle: "mockuser.bsky.social",
+                    displayName: "Mock User",
+                    avatar: nil,
+                    associated: nil,
+                    viewer: nil,
+                    labels: nil,
+                    createdAt: "2024-01-01T00:00:00Z"
+                ),
+                record: BSPostRecord(
+                    type: "app.bsky.feed.post",
+                    text: "This is the original post",
+                    createdAt: "2024-01-01T00:00:00Z",
+                    embed: nil,
+                    reply: nil,
+                    langs: ["en"],
+                    facets: nil
+                ),
+                replyCount: 3,
+                repostCount: 0,
+                likeCount: 5,
+                quoteCount: 0,
+                indexedAt: "2024-01-01T00:00:00Z",
+                viewer: BSViewer(),
+                labels: nil,
+                embed: nil
+            ),
+            reply: nil,
+            reason: nil,
+            embed: nil,
+            viewer: nil,
+            labels: nil
+        )
+        
+        // Create mock replies
+        let mockReplies = [
+            ThreadViewPost(
+                post: FeedViewPost(
+                    post: BSPost(
+                        uri: "at://did:plc:reply1/app.bsky.feed.post/1",
+                        cid: "reply-cid-1",
+                        author: BSAuthor(
+                            did: "did:plc:reply1",
+                            handle: "replyuser1.bsky.social",
+                            displayName: "Reply User 1",
+                            avatar: nil,
+                            associated: nil,
+                            viewer: nil,
+                            labels: nil,
+                            createdAt: "2024-01-01T01:00:00Z"
+                        ),
+                        record: BSPostRecord(
+                            type: "app.bsky.feed.post",
+                            text: "Great post! I totally agree with this.",
+                            createdAt: "2024-01-01T01:00:00Z",
+                            embed: nil,
+                            reply: nil,
+                            langs: ["en"],
+                            facets: nil
+                        ),
+                        replyCount: 1,
+                        repostCount: 0,
+                        likeCount: 2,
+                        quoteCount: 0,
+                        indexedAt: "2024-01-01T01:00:00Z",
+                        viewer: BSViewer(),
+                        labels: nil,
+                        embed: nil
+                    ),
+                    reply: nil,
+                    reason: nil,
+                    embed: nil,
+                    viewer: nil,
+                    labels: nil
+                ),
+                parent: nil,
+                replies: nil,
+                viewer: nil,
+                blocked: false,
+                notFound: false
+            ),
+            ThreadViewPost(
+                post: FeedViewPost(
+                    post: BSPost(
+                        uri: "at://did:plc:reply2/app.bsky.feed.post/2",
+                        cid: "reply-cid-2",
+                        author: BSAuthor(
+                            did: "did:plc:reply2",
+                            handle: "replyuser2.bsky.social",
+                            displayName: "Reply User 2",
+                            avatar: nil,
+                            associated: nil,
+                            viewer: nil,
+                            labels: nil,
+                            createdAt: "2024-01-01T02:00:00Z"
+                        ),
+                        record: BSPostRecord(
+                            type: "app.bsky.feed.post",
+                            text: "Interesting perspective! What about the other side of this?",
+                            createdAt: "2024-01-01T02:00:00Z",
+                            embed: nil,
+                            reply: nil,
+                            langs: ["en"],
+                            facets: nil
+                        ),
+                        replyCount: 0,
+                        repostCount: 0,
+                        likeCount: 1,
+                        quoteCount: 0,
+                        indexedAt: "2024-01-01T02:00:00Z",
+                        viewer: BSViewer(),
+                        labels: nil,
+                        embed: nil
+                    ),
+                    reply: nil,
+                    reason: nil,
+                    embed: nil,
+                    viewer: nil,
+                    labels: nil
+                ),
+                parent: nil,
+                replies: nil,
+                viewer: nil,
+                blocked: false,
+                notFound: false
+            )
+        ]
+        
+        let thread = ThreadViewPost(
+            post: mockPost,
+            parent: nil,
+            replies: mockReplies,
+            viewer: nil,
+            blocked: false,
+            notFound: false
+        )
+        
+        // Create a mock response by encoding and decoding
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+        
+        // First encode the thread
+        let threadData = try! encoder.encode(thread)
+        let threadJSON = try! JSONSerialization.jsonObject(with: threadData) as! [String: Any]
+        
+        // Wrap it in the response structure
+        let mockData: [String: Any] = ["thread": threadJSON]
+        
+        // Convert to JSON data and decode as PostThreadResponse
+        let jsonData = try! JSONSerialization.data(withJSONObject: mockData)
+        return try! decoder.decode(PostThreadResponse.self, from: jsonData)
+    }
+    
+    func createReply(text: String, parentUri: String, parentCid: String, rootUri: String, rootCid: String) async throws -> CreatePostResponse {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        // Generate a mock reply URI
+        let replyURI = "at://\(UUID().uuidString)/app.bsky.feed.post/\(UUID().uuidString)"
+        return CreatePostResponse(uri: replyURI, cid: "mock-reply-cid")
     }
 } 

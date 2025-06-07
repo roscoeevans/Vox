@@ -7,5 +7,6 @@ struct BSReply: Codable {
 
 struct BSReplyRef: Codable {
     let uri: String
+    let cid: String
 }
  

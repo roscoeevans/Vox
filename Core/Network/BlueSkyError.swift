@@ -7,6 +7,7 @@ enum BlueSkyError: LocalizedError {
     case refreshFailed
     case networkError
     case invalidResponse
+    case invalidURI
     case rateLimited(TimeInterval)
     case keychainError(KeychainError)
     
@@ -24,6 +25,8 @@ enum BlueSkyError: LocalizedError {
             return "A network error occurred. Please check your connection."
         case .invalidResponse:
             return "Received an invalid response from the server."
+        case .invalidURI:
+            return "Invalid URI format."
         case .rateLimited(let retryAfter):
             return "Rate limit exceeded. Please try again in \(Int(retryAfter)) seconds."
         case .keychainError(let error):
