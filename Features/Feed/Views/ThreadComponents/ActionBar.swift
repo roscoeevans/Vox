@@ -42,7 +42,7 @@ struct ActionBar: View {
             .padding(.bottom, 2)
             
             ActionButton(
-                icon: isReposted ? "arrow.2.squarepath.fill" : "arrow.2.squarepath",
+                icon: "arrow.2.squarepath",
                 count: repostCount,
                 isActive: isReposted,
                 color: .voxSkyBlue,
@@ -232,6 +232,11 @@ private class MockFeedService: FeedServiceProtocol {
     }
     
     func createReply(text: String, parentUri: String, parentCid: String, rootUri: String, rootCid: String) async throws -> CreatePostResponse {
+        // Not needed for ActionBar preview
+        return CreatePostResponse(uri: "mock-uri", cid: "mock-cid")
+    }
+    
+    func createPost(text: String, videoBlob: BSImage?, videoAspectRatio: AspectRatio?, videoAlt: String?) async throws -> CreatePostResponse {
         // Not needed for ActionBar preview
         return CreatePostResponse(uri: "mock-uri", cid: "mock-cid")
     }

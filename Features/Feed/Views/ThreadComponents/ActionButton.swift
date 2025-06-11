@@ -48,13 +48,13 @@ struct ActionButton: View {
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
                 
-                // Quick pulse animation
-                withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
+                // Quick pulse animation (faster)
+                withAnimation(.spring(response: 0.12, dampingFraction: 0.55)) {
                     pulseScale = 1.15
                 }
                 
-                // Reset scale
-                withAnimation(.spring(response: 0.2, dampingFraction: 0.8).delay(0.1)) {
+                // Reset scale (faster)
+                withAnimation(.spring(response: 0.12, dampingFraction: 0.7).delay(0.04)) {
                     pulseScale = 1.0
                 }
                 
@@ -77,7 +77,8 @@ struct ActionButton: View {
                         .frame(width: 24, height: 24)
                         .contentShape(Rectangle())
                         .scaleEffect(isPressed ? 0.9 : pulseScale)
-                        .animation(.spring(response: 0.15, dampingFraction: 0.8), value: isPressed)
+                        .animation(.spring(response: 0.09, dampingFraction: 0.7), value: isPressed)
+                        .symbolEffect(.bounce, value: isActive)
                 }
                 .frame(width: 28, height: 28)
             }
@@ -92,8 +93,8 @@ struct ActionButton: View {
                 Text("\(count)")
                     .font(.system(.caption2, design: .rounded, weight: .medium))
                     .foregroundStyle(isActive ? buttonGradient : LinearGradient(colors: [.secondary], startPoint: .top, endPoint: .bottom))
-                    .animation(.spring(response: 0.3, dampingFraction: 0.8), value: count)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isActive)
+                    .animation(.spring(response: 0.15, dampingFraction: 0.7), value: count)
+                    .animation(.spring(response: 0.15, dampingFraction: 0.7), value: isActive)
             }
         }
         .frame(height: 38)

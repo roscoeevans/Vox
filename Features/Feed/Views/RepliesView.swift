@@ -326,7 +326,19 @@ struct MediaEmbedView: View {
     }
     
     var body: some View {
-        if let images = embed.images {
+        if let video = embed.video {
+            // Video embed
+            if let videoRef = video.video.ref?.link,
+               let videoURL = constructBlobURL(cid: videoRef, did: authorDID) {
+                VideoPlayerView(
+                    videoURL: videoURL,
+                    aspectRatio: video.aspectRatio,
+                    thumbnail: video.thumb,
+                    alt: video.alt
+                )
+                .frame(height: 300)
+            }
+        } else if let images = embed.images {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(images.indices, id: \.self) { index in
@@ -348,9 +360,31 @@ struct MediaEmbedView: View {
                 }
             }
         } else if let external = embed.external {
-            // Use the new ExternalLinkCard component
-            ExternalLinkCard(external: external, authorDID: authorDID)
+            // Use the appropriate card based on URL
+            if isYouTubeURL(external.uri) {
+                YouTubeLinkCard(external: external, authorDID: authorDID)
+            } else {
+                ExternalLinkCard(external: external, authorDID: authorDID)
+            }
         }
+    }
+    
+    // Helper function to check if URL is a YouTube link
+    private func isYouTubeURL(_ urlString: String) -> Bool {
+        guard let url = URL(string: urlString),
+              let host = url.host?.lowercased() else { return false }
+        
+        // Check for various YouTube domains
+        return host.contains("youtube.com") || 
+               host.contains("youtu.be") || 
+               host.contains("m.youtube.com") ||
+               host.contains("youtube-nocookie.com")
+    }
+    
+    // Helper function to construct blob URL
+    private func constructBlobURL(cid: String, did: String?) -> URL? {
+        guard let did = did else { return nil }
+        return URL(string: "https://bsky.social/xrpc/com.atproto.sync.getBlob?did=\(did)&cid=\(cid)")
     }
 }
 

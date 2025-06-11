@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var authService = BlueSkyAuthService()
     @State private var feedService: BlueSkyFeedService
     @State private var isRestoringSession = true
+    @State private var showingComposer = false
     
     init() {
         let sharedAuthService = BlueSkyAuthService()
@@ -25,26 +26,46 @@ struct ContentView: View {
             if isRestoringSession {
                 ProgressView("Restoring session...")
             } else if appState.isAuthenticated {
-                TabView {
-                    FeedView(feedService: feedService)
-                        .tabItem {
-                            Image(systemName: "house")
-                        }
+                ZStack(alignment: .bottomTrailing) {
+                    TabView {
+                        FeedView(feedService: feedService)
+                            .tabItem {
+                                Image(systemName: "house")
+                            }
+                        
+                        Text("Search")
+                            .tabItem {
+                                Image(systemName: "magnifyingglass")
+                            }
+                        
+                        Text("Notifications")
+                            .tabItem {
+                                Image(systemName: "bell")
+                            }
+                        
+                        Text("Profile")
+                            .tabItem {
+                                Image(systemName: "person")
+                            }
+                    }
                     
-                    Text("Search")
-                        .tabItem {
-                            Image(systemName: "magnifyingglass")
-                        }
-                    
-                    Text("Notifications")
-                        .tabItem {
-                            Image(systemName: "bell")
-                        }
-                    
-                    Text("Profile")
-                        .tabItem {
-                            Image(systemName: "person")
-                        }
+                    // Floating compose button
+                    Button(action: {
+                        showingComposer = true
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24, weight: .medium, design: .rounded))
+                            .foregroundColor(.white)
+                            .frame(width: 56, height: 56)
+                            .background(LinearGradient.voxCoolGradient)
+                            .clipShape(Circle())
+                            .shadow(color: Color.voxSkyBlue.opacity(0.3), radius: 8, x: 0, y: 4)
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 90)
+                }
+                .sheet(isPresented: $showingComposer) {
+                    ComposePostView(feedService: feedService, authService: authService)
                 }
             } else {
                 LoginView(authService: authService)

@@ -8,6 +8,7 @@ protocol FeedServiceProtocol {
     func unrepostPost(uri: String) async throws
     func getPostThread(uri: String, depth: Int?, parentHeight: Int?) async throws -> PostThreadResponse
     func createReply(text: String, parentUri: String, parentCid: String, rootUri: String, rootCid: String) async throws -> CreatePostResponse
+    func createPost(text: String, videoBlob: BSImage?, videoAspectRatio: AspectRatio?, videoAlt: String?) async throws -> CreatePostResponse
 }
 
 actor BlueSkyFeedService: FeedServiceProtocol {
@@ -50,7 +51,10 @@ actor BlueSkyFeedService: FeedServiceProtocol {
         }
         
         do {
-            return try JSONDecoder().decode(TimelineResponse.self, from: data)
+            let decoder = JSONDecoder()
+            let response = try decoder.decode(TimelineResponse.self, from: data)
+            
+            return response
         } catch {
             print("[FeedService] Decoding error: \(error)")
             throw error
@@ -289,6 +293,70 @@ actor BlueSkyFeedService: FeedServiceProtocol {
                 ],
                 "createdAt": ISO8601DateFormatter().string(from: Date())
             ]
+        ]
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(session.accessJwt)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw BlueSkyError.networkError
+        }
+        
+        return try JSONDecoder().decode(CreatePostResponse.self, from: data)
+    }
+    
+    func createPost(text: String, videoBlob: BSImage? = nil, videoAspectRatio: AspectRatio? = nil, videoAlt: String? = nil) async throws -> CreatePostResponse {
+        guard let session = await authService.currentSession else {
+            throw BlueSkyError.noActiveSession
+        }
+        
+        let endpoint = "com.atproto.repo.createRecord"
+        let url = URL(string: baseURL + endpoint)!
+        
+        var record: [String: Any] = [
+            "$type": "app.bsky.feed.post",
+            "text": text,
+            "createdAt": ISO8601DateFormatter().string(from: Date())
+        ]
+        
+        // Add video embed if provided
+        if let videoBlob = videoBlob {
+            var videoEmbed: [String: Any] = [
+                "$type": "app.bsky.embed.video",
+                "video": [
+                    "$type": videoBlob.type ?? "blob",
+                    "ref": [
+                        "$link": videoBlob.ref?.link ?? ""
+                    ],
+                    "mimeType": videoBlob.mimeType ?? "video/mp4",
+                    "size": videoBlob.size ?? 0
+                ]
+            ]
+            
+            if let aspectRatio = videoAspectRatio {
+                videoEmbed["aspectRatio"] = [
+                    "width": aspectRatio.width,
+                    "height": aspectRatio.height
+                ]
+            }
+            
+            if let alt = videoAlt {
+                videoEmbed["alt"] = alt
+            }
+            
+            record["embed"] = videoEmbed
+        }
+        
+        let body: [String: Any] = [
+            "repo": session.did,
+            "collection": "app.bsky.feed.post",
+            "record": record
         ]
         
         var request = URLRequest(url: url)

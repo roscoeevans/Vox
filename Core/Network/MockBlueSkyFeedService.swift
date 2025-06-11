@@ -121,6 +121,231 @@ actor MockBlueSkyFeedService: FeedServiceProtocol {
                 embed: nil,
                 viewer: nil,
                 labels: nil
+            ),
+            // Add a post with a quote
+            FeedViewPost(
+                post: BSPost(
+                    uri: "at://did:plc:mock4/app.bsky.feed.post/4",
+                    cid: "mock-cid-4",
+                    author: BSAuthor(
+                        did: "did:plc:mock4",
+                        handle: "dave.bsky.social",
+                        displayName: "Dave Miller",
+                        avatar: nil,
+                        associated: nil,
+                        viewer: nil,
+                        labels: nil,
+                        createdAt: "2024-03-20T09:00:00Z"
+                    ),
+                    record: BSPostRecord(
+                        type: "app.bsky.feed.post",
+                        text: "This is exactly what I was thinking! Great point about the importance of user experience.",
+                        createdAt: "2024-03-20T09:00:00Z",
+                        embed: BSEmbed(
+                            type: "app.bsky.embed.record",
+                            record: BSEmbedRecord(
+                                type: "app.bsky.embed.record",
+                                record: BSEmbedRecordView(
+                                    type: "app.bsky.embed.record",
+                                    uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                                    cid: "quoted-cid",
+                                    post: BSPost(
+                                        uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                                        cid: "quoted-cid",
+                                        author: BSAuthor(
+                                            did: "did:plc:quoted",
+                                            handle: "quoteduser.bsky.social",
+                                            displayName: "Quoted User",
+                                            avatar: nil,
+                                            associated: nil,
+                                            viewer: nil,
+                                            labels: nil,
+                                            createdAt: "2024-03-19T10:00:00Z"
+                                        ),
+                                        record: BSPostRecord(
+                                            type: "app.bsky.feed.post",
+                                            text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                            createdAt: "2024-03-19T10:00:00Z",
+                                            embed: nil,
+                                            reply: nil,
+                                            langs: ["en"],
+                                            facets: nil
+                                        ),
+                                        replyCount: 2,
+                                        repostCount: 5,
+                                        likeCount: 15,
+                                        quoteCount: 1,
+                                        indexedAt: "2024-03-19T10:00:00Z",
+                                        viewer: nil,
+                                        labels: nil,
+                                        embed: nil
+                                    ),
+                                    value: BSPostRecord(
+                                        type: "app.bsky.feed.post",
+                                        text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                        createdAt: "2024-03-19T10:00:00Z",
+                                        embed: nil,
+                                        reply: nil,
+                                        langs: ["en"],
+                                        facets: nil
+                                    ),
+                                    labels: nil,
+                                    likeCount: 15,
+                                    replyCount: 2,
+                                    repostCount: 5,
+                                    quoteCount: 1,
+                                    indexedAt: "2024-03-19T10:00:00Z",
+                                    embeds: nil,
+                                    viewer: nil
+                                ),
+                                media: nil
+                            ),
+                            media: nil,
+                            images: nil,
+                            external: nil
+                        ),
+                        reply: nil,
+                        langs: ["en"],
+                        facets: nil
+                    ),
+                    replyCount: 1,
+                    repostCount: 3,
+                    likeCount: 12,
+                    quoteCount: 0,
+                    indexedAt: "2024-03-20T09:00:00Z",
+                    viewer: nil,
+                    labels: nil,
+                    embed: BSEmbed(
+                        type: "app.bsky.embed.record",
+                        record: BSEmbedRecord(
+                            type: "app.bsky.embed.record",
+                            record: BSEmbedRecordView(
+                                type: "app.bsky.embed.record",
+                                uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                                cid: "quoted-cid",
+                                post: BSPost(
+                                    uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                                    cid: "quoted-cid",
+                                    author: BSAuthor(
+                                        did: "did:plc:quoted",
+                                        handle: "quoteduser.bsky.social",
+                                        displayName: "Quoted User",
+                                        avatar: nil,
+                                        associated: nil,
+                                        viewer: nil,
+                                        labels: nil,
+                                        createdAt: "2024-03-19T10:00:00Z"
+                                    ),
+                                    record: BSPostRecord(
+                                        type: "app.bsky.feed.post",
+                                        text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                        createdAt: "2024-03-19T10:00:00Z",
+                                        embed: nil,
+                                        reply: nil,
+                                        langs: ["en"],
+                                        facets: nil
+                                    ),
+                                    replyCount: 2,
+                                    repostCount: 5,
+                                    likeCount: 15,
+                                    quoteCount: 1,
+                                    indexedAt: "2024-03-19T10:00:00Z",
+                                    viewer: nil,
+                                    labels: nil,
+                                    embed: nil
+                                ),
+                                value: BSPostRecord(
+                                    type: "app.bsky.feed.post",
+                                    text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                    createdAt: "2024-03-19T10:00:00Z",
+                                    embed: nil,
+                                    reply: nil,
+                                    langs: ["en"],
+                                    facets: nil
+                                ),
+                                labels: nil,
+                                likeCount: 15,
+                                replyCount: 2,
+                                repostCount: 5,
+                                quoteCount: 1,
+                                indexedAt: "2024-03-19T10:00:00Z",
+                                embeds: nil,
+                                viewer: nil
+                            ),
+                            media: nil
+                        ),
+                        media: nil,
+                        images: nil,
+                        external: nil
+                    )
+                ),
+                reply: nil,
+                reason: nil,
+                embed: BSEmbed(
+                    type: "app.bsky.embed.record",
+                    record: BSEmbedRecord(
+                        type: "app.bsky.embed.record",
+                        record: BSEmbedRecordView(
+                            type: "app.bsky.embed.record",
+                            uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                            cid: "quoted-cid",
+                            post: BSPost(
+                                uri: "at://did:plc:quoted/app.bsky.feed.post/quoted",
+                                cid: "quoted-cid",
+                                author: BSAuthor(
+                                    did: "did:plc:quoted",
+                                    handle: "quoteduser.bsky.social",
+                                    displayName: "Quoted User",
+                                    avatar: nil,
+                                    associated: nil,
+                                    viewer: nil,
+                                    labels: nil,
+                                    createdAt: "2024-03-19T10:00:00Z"
+                                ),
+                                record: BSPostRecord(
+                                    type: "app.bsky.feed.post",
+                                    text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                    createdAt: "2024-03-19T10:00:00Z",
+                                    embed: nil,
+                                    reply: nil,
+                                    langs: ["en"],
+                                    facets: nil
+                                ),
+                                replyCount: 2,
+                                repostCount: 5,
+                                likeCount: 15,
+                                quoteCount: 1,
+                                indexedAt: "2024-03-19T10:00:00Z",
+                                viewer: nil,
+                                labels: nil,
+                                embed: nil
+                            ),
+                            value: BSPostRecord(
+                                type: "app.bsky.feed.post",
+                                text: "User experience should always be the top priority when building apps. If users can't figure out how to use your app, it doesn't matter how powerful it is.",
+                                createdAt: "2024-03-19T10:00:00Z",
+                                embed: nil,
+                                reply: nil,
+                                langs: ["en"],
+                                facets: nil
+                            ),
+                            labels: nil,
+                            likeCount: 15,
+                            replyCount: 2,
+                            repostCount: 5,
+                            quoteCount: 1,
+                            indexedAt: "2024-03-19T10:00:00Z",
+                            embeds: nil,
+                            viewer: nil
+                        ),
+                        media: nil
+                    ),
+                    media: nil,
+                    images: nil,
+                    external: nil
+                ),
+                viewer: nil,
+                labels: nil
             )
         ]
     }
@@ -331,5 +556,14 @@ actor MockBlueSkyFeedService: FeedServiceProtocol {
         // Generate a mock reply URI
         let replyURI = "at://\(UUID().uuidString)/app.bsky.feed.post/\(UUID().uuidString)"
         return CreatePostResponse(uri: replyURI, cid: "mock-reply-cid")
+    }
+    
+    func createPost(text: String, videoBlob: BSImage? = nil, videoAspectRatio: AspectRatio? = nil, videoAlt: String? = nil) async throws -> CreatePostResponse {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        // Generate a mock post URI
+        let postURI = "at://\(UUID().uuidString)/app.bsky.feed.post/\(UUID().uuidString)"
+        return CreatePostResponse(uri: postURI, cid: "mock-post-cid")
     }
 } 
